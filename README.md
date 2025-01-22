@@ -17,7 +17,6 @@ composer require jdz/process
 Here is a basic example of how to use the Process class to track the execution time of a process, including sections and subsections. You can find the complete example in the file examples/example.php.
 
 ```php 
-// autoload
 use JDZ\Utils\Process;
 
 $process = Process::singleton();
