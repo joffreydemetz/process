@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) Joffrey Demetz <joffrey.demetz@gmail.com>
  * 
@@ -24,7 +25,7 @@ class Process
     public static function singleton(): self
     {
         static $instance;
-        if ( !isset($instance) ){
+        if (!isset($instance)) {
             $instance = new self();
         }
         return $instance;
@@ -34,100 +35,100 @@ class Process
     {
         $this->start = microtime(true);
     }
-    
+
     public function getTime(): string
     {
-      $this->close();
-      return $this->formatTime();
+        $this->close();
+        return $this->formatTime();
     }
-    
+
     public function startSection(string $name)
     {
-        if ( $this->currentSection ){
-          $this->endSection();
+        if ($this->currentSection) {
+            $this->endSection();
         }
-        
+
         $section = new ProcessItem($name);
-        
-        $this->sections[] = $section; 
+
+        $this->sections[] = $section;
         $this->currentSection = $section;
-        
+
         return $this;
     }
-    
-    public function startSubsection(string $name, bool $endPrevious=true)
+
+    public function startSubsection(string $name, bool $endPrevious = true)
     {
-        if ( true === $endPrevious && $this->currentSection ){
-          $this->endSubsection();
+        if (true === $endPrevious && $this->currentSection) {
+            $this->endSubsection();
         }
-        
-        if ( !$this->currentSection ){
-            throw new Exception("No section has been started.");
+
+        if (!$this->currentSection) {
+            throw new \Exception("No section has been started.");
         }
-        
+
         $subsection = new ProcessItem($name);
         $this->currentSection->addChild($subsection);
         $this->currentSection = $subsection;
-        
+
         return $this;
     }
-    
+
     public function endSubsection()
     {
-        if ( $this->currentSection && $this->currentSection->parent ){
-          $this->currentSection->close();
-          $this->currentSection = $this->currentSection->parent;
+        if ($this->currentSection && $this->currentSection->parent) {
+            $this->currentSection->close();
+            $this->currentSection = $this->currentSection->parent;
         }
-        
+
         return $this;
     }
 
     public function endSection()
     {
-        if ( $this->currentSection ){
-          while($this->currentSection->parent){
-            $this->endSubsection();
-          }
-          $this->currentSection->close();
-          $this->currentSection = null;
+        if ($this->currentSection) {
+            while ($this->currentSection->parent) {
+                $this->endSubsection();
+            }
+            $this->currentSection->close();
+            $this->currentSection = null;
         }
-        
+
         return $this;
     }
-    
+
     public function close()
     {
         $this->endSection();
 
         if (null === $this->end) {
-          $endTime = microtime(true);
-          $this->end = $endTime;
-          $this->time = $endTime - $this->start;
-      }
+            $endTime = microtime(true);
+            $this->end = $endTime;
+            $this->time = $endTime - $this->start;
+        }
     }
-    
+
     public function toArray(): array
-    { 
+    {
         $this->close();
-        
-        $list=[];
-        $list[] = 'Total exec time : '.$this->formatTime();
-        foreach($this->sections as $section) {
+
+        $list = [];
+        $list[] = 'Total exec time : ' . $this->formatTime();
+        foreach ($this->sections as $section) {
             $list[] = '---- ';
             $list = $section->export($list);
         }
-        
+
         return $list;
     }
-    
+
     private function formatTime(): string
     {
         $minutes = floor($this->time / 60);
-        $remainingSeconds = $this->time % 60;
+        $remainingSeconds = (int)$this->time % 60;
         $milliseconds = round(($this->time - floor($this->time)) * 1000);
 
         $timeString = '';
-        
+
         if ($minutes > 0) {
             $timeString .= sprintf("%d min ", $minutes);
         }

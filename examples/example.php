@@ -1,7 +1,7 @@
 <?php
-use JDZ\Utils\Process;
+require_once realpath(__DIR__ . '/../vendor/autoload.php');
 
-$process = Process::singleton();
+$process = \JDZ\Utils\Process::singleton();
 
 // Start the main process
 $process->startSection("Main Process");
@@ -22,7 +22,8 @@ $process->endSubsection();
 $process->endSection();
 
 // Get the formatted time for the entire process
-echo $process->getTime(); // Example output: "3 min 3 s 234 ms"
+echo 'Total execution time ' . $process->getTime() . "\n\n"; // Example output: "3 min 3 s 234 ms"
 
 // Export the sections and subsections in a hierarchical format
+echo 'Export :' . "\n";
 print_r($process->toArray());
