@@ -1,0 +1,28 @@
+{
+    "name": "jdz/process",
+    "type": "library",
+    "description": "Utility to debug processes calculating execution time",
+    "keywords": [
+        "JDZ",
+        "process",
+        "debug"
+    ],
+    "homepage": "https://jdz.joffreydemetz.com/process/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joffrey Demetz",
+            "email": "joffrey.demetz@gmail.com",
+            "homepage": "https://joffreydemetz.com",
+            "role": "Lead"
+        }
+    ],
+    "require":{
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "JDZ\\Utils\\": "src"
+        }
+    }
+}
