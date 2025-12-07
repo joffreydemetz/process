@@ -40,15 +40,15 @@ class ProcessTest extends TestCase
 
     public function testSingletonReturnsSameInstance(): void
     {
-        $instance1 = Process::singleton();
-        $instance2 = Process::singleton();
+        $instance1 = Process::create();
+        $instance2 = Process::create();
 
         $this->assertSame($instance1, $instance2);
     }
 
     public function testSingletonReturnsProcessInstance(): void
     {
-        $instance = Process::singleton();
+        $instance = Process::create();
 
         $this->assertInstanceOf(Process::class, $instance);
     }
