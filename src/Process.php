@@ -17,7 +17,15 @@ class Process
     private array $sections = [];
     private ?ProcessItem $currentSection = null;
 
+    /**
+     * @deprecated Use create() method instead.
+     */
     public static function singleton(): self
+    {
+        return self::create();
+    }
+
+    public static function create(): self
     {
         static $instance;
         if (!isset($instance)) {
@@ -51,6 +59,9 @@ class Process
         return $this;
     }
 
+    /**
+     * @throws \Exception  if no section has been started.
+     */
     public function startSubsection(string $name, bool $endPrevious = true)
     {
         if (true === $endPrevious && $this->currentSection) {
