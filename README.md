@@ -2,15 +2,26 @@
 
 A PHP package for tracking the execution time of processes, sections, and subsections. This package allows you to track and format the time taken for each part of your process, providing a detailed hierarchical view of the execution time.
 
+## Features
+
+- Track execution time of processes, sections, and subsections
+- Hierarchical structure for sections and subsections
+- Formatted time output
+- Easy to use API
+
+## Requirements
+
+- PHP 8.1 or higher
+
 ## Installation
 
-You can install the `jdz/process` package via Composer:
+Install via Composer:
 
 ```bash
 composer require jdz/process
 ```
 
-## Usage
+## Quick Start
 
 ### Basic Example
 
@@ -19,7 +30,7 @@ Here is a basic example of how to use the Process class to track the execution t
 ```php 
 use JDZ\Utils\Process;
 
-$process = Process::singleton();
+$process = Process::create();
 
 // Start the main process
 $process->startSection("Main Process");
@@ -56,6 +67,7 @@ Total exec time : 3 min 3 s 234 ms
 |-- Loading Data : 1 s 234 ms
 |-- Processing Data : 2 min 0 s 0 ms
 ```
+
 ## Methods Overview
 
 - **`startSection(string $name)`**: Start a new section with the given name.
@@ -79,3 +91,41 @@ Examples of formatted time:
 - `3 min 3 s 234 ms`
 - `2 s 150 ms`
 - `0 ms`
+
+## Testing
+
+Run the test suite:
+
+```bash
+# Run all tests
+composer test
+
+# Run with coverage
+composer test -- --coverage-html coverage
+
+# Run specific test file
+vendor/bin/phpunit tests/ProcessItemTest.php
+vendor/bin/phpunit tests/ProcessTest.php
+
+# Run with detailed output
+vendor/bin/phpunit --testdox
+```
+
+- **ProcessItemTest**: 28 tests covering all aspects of the ProcessItem class, including:
+  - Construction and initialization
+  - Parent-child relationships
+  - Time tracking and closure
+  - Hierarchical export functionality
+  - Time formatting
+
+- **ProcessTest**: 25 tests covering all aspects of the Process class, including:
+  - Singleton pattern
+  - Section and subsection management
+  - Time tracking and formatting
+  - Complex nested workflows
+  - Idempotent operations
+
+## License
+
+This library is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
