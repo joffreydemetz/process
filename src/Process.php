@@ -147,6 +147,10 @@ class Process
             $timeString .= sprintf("%d ms ", $milliseconds);
         }
 
+        if ('' === $timeString) {
+            $timeString = '0ms';
+        }
+
         return $timeString;
     }
 }
