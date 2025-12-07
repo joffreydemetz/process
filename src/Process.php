@@ -1,19 +1,14 @@
 <?php
 
 /**
- * (c) Joffrey Demetz <joffrey.demetz@gmail.com>
- * 
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * @author    Joffrey Demetz <joffrey.demetz@gmail.com>
+ * @license   MIT License; <https://opensource.org/licenses/MIT>
  */
 
 namespace JDZ\Utils;
 
 use JDZ\Utils\ProcessItem;
 
-/**
- * @author Joffrey Demetz <joffrey.demetz@gmail.com>
- */
 class Process
 {
     private float $start;
@@ -22,7 +17,15 @@ class Process
     private array $sections = [];
     private ?ProcessItem $currentSection = null;
 
+    /**
+     * @deprecated Use create() method instead.
+     */
     public static function singleton(): self
+    {
+        return self::create();
+    }
+
+    public static function create(): self
     {
         static $instance;
         if (!isset($instance)) {
@@ -56,6 +59,9 @@ class Process
         return $this;
     }
 
+    /**
+     * @throws \Exception  if no section has been started.
+     */
     public function startSubsection(string $name, bool $endPrevious = true)
     {
         if (true === $endPrevious && $this->currentSection) {
@@ -139,6 +145,10 @@ class Process
 
         if ($milliseconds > 0 || ($minutes > 0 || $remainingSeconds > 0)) {
             $timeString .= sprintf("%d ms ", $milliseconds);
+        }
+
+        if ('' === $timeString) {
+            $timeString = '0ms';
         }
 
         return $timeString;

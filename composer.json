@@ -5,7 +5,8 @@
     "keywords": [
         "JDZ",
         "process",
-        "debug"
+        "debug",
+        "utilities"
     ],
     "homepage": "https://jdz.joffreydemetz.com/process/",
     "license": "MIT",
@@ -17,12 +18,24 @@
             "role": "Lead"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
-        "php": ">=8.1"
+        "php": "^8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
     },
     "autoload": {
         "psr-4": {
             "JDZ\\Utils\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "JDZ\\Utils\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --colors=always"
     }
 }

@@ -1,7 +1,7 @@
 <?php
 require_once realpath(__DIR__ . '/../vendor/autoload.php');
 
-$process = \JDZ\Utils\Process::singleton();
+$process = \JDZ\Utils\Process::create();
 
 // Start the main process
 $process->startSection("Main Process");
