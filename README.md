@@ -129,3 +129,12 @@ vendor/bin/phpunit --testdox
 
 This library is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+## Changelog
+
+### Version 2.0.0
+- Removed deprecated singleton() method in favor of create() method.
+- Added Unit tests
+- Improved time formatting to handle zero durations correctly.
+
+### Version 1.0
+- Initial release with core functionality for tracking process execution time, sections, and subsections.
