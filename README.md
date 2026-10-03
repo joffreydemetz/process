@@ -9,9 +9,11 @@ A PHP package for tracking the execution time of processes, sections, and subsec
 - Formatted time output
 - Easy to use API
 
+> **Upgrading from 1.x:** the 1.0.0 entry point was `Process::singleton()`. Since 2.0.0 it is `Process::create()`; `singleton()` is deprecated but still there (it delegates to `create()`).
+
 ## Requirements
 
-- PHP 8.1 or higher
+- PHP 8.2 or higher
 
 ## Installation
 
@@ -51,7 +53,7 @@ $process->endSubsection();
 $process->endSection();
 
 // Get the formatted time for the entire process
-echo $process->getTime(); // Example output: "3 min 3 s 234 ms"
+echo $process->getTime(); // Example output: "3 s 4 ms"
 
 // Export the sections and subsections in a hierarchical format
 print_r($process->toArray());
@@ -59,17 +61,19 @@ print_r($process->toArray());
 
 ### Example Output
 
-When calling toArray(), it will return an array representing the process, sections, and subsections:
+When calling toArray(), it will return an array of lines representing the process, sections, and subsections (one entry per line, timings vary):
 
 ```lua 
-Total exec time : 3 min 3 s 234 ms
----- Main Process : 3 min 3 s 234 ms
-|-- Loading Data : 1 s 234 ms
-|-- Processing Data : 2 min 0 s 0 ms
+Total exec time : 3 s 4 ms
+---- 
+Main Process : 3 s 4 ms
+|- Loading Data : 1 s 1 ms
+|- Processing Data : 2 s 2 ms
 ```
 
 ## Methods Overview
 
+- **`Process::create()`**: Get the shared `Process` instance (created on first call). `Process::singleton()` is a deprecated alias.
 - **`startSection(string $name)`**: Start a new section with the given name.
 - **`startSubsection(string $name, bool $endPrevious = true)`**: Start a new subsection within the current section.
 - **`endSection()`**: End the current section and close all its subsections.
@@ -90,7 +94,7 @@ Examples of formatted time:
 
 - `3 min 3 s 234 ms`
 - `2 s 150 ms`
-- `0 ms`
+- `0ms` (zero duration)
 
 ## Testing
 
@@ -111,15 +115,15 @@ vendor/bin/phpunit tests/ProcessTest.php
 vendor/bin/phpunit --testdox
 ```
 
-- **ProcessItemTest**: 28 tests covering all aspects of the ProcessItem class, including:
+- **ProcessItemTest** covers the ProcessItem class, including:
   - Construction and initialization
   - Parent-child relationships
   - Time tracking and closure
   - Hierarchical export functionality
   - Time formatting
 
-- **ProcessTest**: 25 tests covering all aspects of the Process class, including:
-  - Singleton pattern
+- **ProcessTest** covers the Process class, including:
+  - Shared instance (`create()` / deprecated `singleton()`)
   - Section and subsection management
   - Time tracking and formatting
   - Complex nested workflows
@@ -131,8 +135,12 @@ This library is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Changelog
 
+### Version 2.0.1
+- Requires PHP >= 8.2
+- PHPUnit 11
+
 ### Version 2.0.0
-- Removed deprecated singleton() method in favor of create() method.
+- Added `create()`; `singleton()` is deprecated in its favor (still available, delegates to `create()`).
 - Added Unit tests
 - Improved time formatting to handle zero durations correctly.
 
