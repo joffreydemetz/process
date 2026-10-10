@@ -135,6 +135,11 @@ This library is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Changelog
 
+### Version 2.0.2
+- Times are rounded to the millisecond before being split: 0.9996 s reads `1 s 0 ms`, not `1000 ms`
+- An item that is not closed yet formats as `0ms` without a PHP deprecation
+- `ProcessItem::formatSeconds()`: the one formatter, shared by `Process` and `ProcessItem`
+
 ### Version 2.0.1
 - Requires PHP >= 8.2
 - PHPUnit 11
