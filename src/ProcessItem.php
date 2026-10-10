@@ -68,9 +68,20 @@ class ProcessItem
 
     private function formatTime(): string
     {
-        $minutes = floor($this->time / 60);
-        $remainingSeconds = (int)$this->time % 60;
-        $milliseconds = round(($this->time - floor($this->time)) * 1000);
+        return self::formatSeconds($this->time);
+    }
+
+    /**
+     * A duration as "M min S s MS ms " (the larger units only when non-zero), or
+     * "0ms". Shared with Process. Rounded to the millisecond before splitting, so
+     * 0.9996 s is "1 s 0 ms " (it printed "1000 ms "); no time yet is "0ms".
+     */
+    public static function formatSeconds(?float $seconds): string
+    {
+        $totalMs = (int)round(($seconds ?? 0.0) * 1000);
+        $minutes = intdiv($totalMs, 60000);
+        $remainingSeconds = intdiv($totalMs % 60000, 1000);
+        $milliseconds = $totalMs % 1000;
 
         $timeString = '';
 

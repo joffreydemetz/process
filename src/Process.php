@@ -129,28 +129,6 @@ class Process
 
     private function formatTime(): string
     {
-        $minutes = floor($this->time / 60);
-        $remainingSeconds = (int)$this->time % 60;
-        $milliseconds = round(($this->time - floor($this->time)) * 1000);
-
-        $timeString = '';
-
-        if ($minutes > 0) {
-            $timeString .= sprintf("%d min ", $minutes);
-        }
-
-        if ($remainingSeconds > 0 || $minutes > 0) {
-            $timeString .= sprintf("%d s ", $remainingSeconds);
-        }
-
-        if ($milliseconds > 0 || ($minutes > 0 || $remainingSeconds > 0)) {
-            $timeString .= sprintf("%d ms ", $milliseconds);
-        }
-
-        if ('' === $timeString) {
-            $timeString = '0ms';
-        }
-
-        return $timeString;
+        return ProcessItem::formatSeconds($this->time);
     }
 }

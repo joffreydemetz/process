@@ -214,6 +214,11 @@ class ProcessItemTest extends TestCase
             'seconds' => [2.5, '2 s 500 ms '],
             'a whole minute' => [60.0, '1 min 0 s 0 ms '],
             'minutes' => [125.5, '2 min 5 s 500 ms '],
+            // rounded to the millisecond first: these printed "1000 ms "
+            'just under a second' => [0.9996, '1 s 0 ms '],
+            'just under a minute' => [59.9996, '1 min 0 s 0 ms '],
+            // an item not closed yet has no time (floor(null) was a deprecation)
+            'not closed' => [null, '0ms'],
         ];
     }
 
