@@ -277,8 +277,9 @@ class ProcessItemTest extends TestCase
         usleep(50000);
         $item->close();
 
-        // Allow for some margin of error (±20ms)
+        // usleep() never wakes early, but it can overshoot a lot: the Windows timer
+        // tick is ~15.6 ms and a busy machine adds more. Bound the top loosely.
         $this->assertGreaterThanOrEqual($expectedDelay - 0.02, $item->time);
-        $this->assertLessThanOrEqual($expectedDelay + 0.02, $item->time);
+        $this->assertLessThan(0.5, $item->time);
     }
 }
