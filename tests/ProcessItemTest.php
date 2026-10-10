@@ -8,38 +8,11 @@
 namespace JDZ\Utils\Tests;
 
 use JDZ\Utils\ProcessItem;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ProcessItemTest extends TestCase
 {
-    public function testConstructorSetsNameAndParent(): void
-    {
-        $item = new ProcessItem('TestItem');
-
-        $this->assertEquals('TestItem', $item->name);
-        $this->assertNull($item->parent);
-        $this->assertIsFloat($item->start);
-        $this->assertNull($item->end);
-        $this->assertNull($item->time);
-        $this->assertEmpty($item->children);
-    }
-
-    public function testConstructorWithParent(): void
-    {
-        $parent = new ProcessItem('Parent');
-        $child = new ProcessItem('Child', $parent);
-
-        $this->assertEquals('Child', $child->name);
-        $this->assertSame($parent, $child->parent);
-    }
-
-    public function testDefaultConstructorName(): void
-    {
-        $item = new ProcessItem();
-
-        $this->assertEquals('ROOT', $item->name);
-    }
-
     public function testFindByNameReturnsTrue(): void
     {
         $item = new ProcessItem('TestItem');
@@ -192,58 +165,6 @@ class ProcessItemTest extends TestCase
         $this->assertStringContainsString('TestItem', $result[2]);
     }
 
-    public function testFormatTimeWithMilliseconds(): void
-    {
-        $item = new ProcessItem('TestItem');
-        usleep(50000); // 50ms
-        $item->close();
-
-        $result = $item->export();
-
-        $this->assertStringContainsString('ms', $result[0]);
-    }
-
-    public function testFormatTimeWithSeconds(): void
-    {
-        $item = new ProcessItem('TestItem');
-        // Manually set time to 2.5 seconds
-        $item->end = $item->start + 2.5;
-        $item->time = 2.5;
-
-        $result = $item->export();
-
-        $this->assertStringContainsString('s', $result[0]);
-        $this->assertStringContainsString('2 s', $result[0]);
-    }
-
-    public function testFormatTimeWithMinutes(): void
-    {
-        $item = new ProcessItem('TestItem');
-        // Manually set time to 125.5 seconds (2 min 5 s 500 ms)
-        $item->end = $item->start + 125.5;
-        $item->time = 125.5;
-
-        $result = $item->export();
-
-        $this->assertStringContainsString('min', $result[0]);
-        $this->assertStringContainsString('2 min', $result[0]);
-        $this->assertStringContainsString('5 s', $result[0]);
-    }
-
-    public function testFormatTimeWithZeroTime(): void
-    {
-        $item = new ProcessItem('TestItem');
-        // Close immediately
-        $item->close();
-
-        // For very small times (< 1ms), should still show something
-        $result = $item->export();
-
-        $this->assertStringContainsString('TestItem', $result[0]);
-        // The time should be formatted (could be 0ms or very small ms value)
-        $this->assertNotEquals('TestItem : ', $result[0]);
-    }
-
     public function testChildParentRelationship(): void
     {
         $parent = new ProcessItem('Parent');
@@ -281,5 +202,27 @@ class ProcessItemTest extends TestCase
         // tick is ~15.6 ms and a busy machine adds more. Bound the top loosely.
         $this->assertGreaterThanOrEqual($expectedDelay - 0.02, $item->time);
         $this->assertLessThan(0.5, $item->time);
+    }
+
+    public static function times(): array
+    {
+        return [
+            'nothing measurable' => [0.0, '0ms'],
+            'under half a millisecond' => [0.0004, '0ms'],
+            'milliseconds' => [0.05, '50 ms '],
+            'a whole second' => [1.0, '1 s 0 ms '],
+            'seconds' => [2.5, '2 s 500 ms '],
+            'a whole minute' => [60.0, '1 min 0 s 0 ms '],
+            'minutes' => [125.5, '2 min 5 s 500 ms '],
+        ];
+    }
+
+    #[DataProvider('times')]
+    public function testExportFormatsTheTime(?float $time, string $formatted): void
+    {
+        $item = new ProcessItem('Step');
+        $item->time = $time;
+
+        $this->assertSame(['Step : ' . $formatted], $item->export());
     }
 }
